@@ -13,8 +13,9 @@ class ShopCategoryController extends Controller
     {
 
         $topTenShopCategories = SCMVShopCategory::limit(10)
-                                ->orderBy('order', 'desc') 
-                                ->get();
+            ->orderBy('order', 'desc')
+            ->get();
+
         return ShopCategoryResource::collection($topTenShopCategories);
     }
 }

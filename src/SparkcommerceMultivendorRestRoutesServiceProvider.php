@@ -2,9 +2,9 @@
 
 namespace Rahat1994\SparkcommerceMultivendorRestRoutes;
 
+use Rahat1994\SparkcommerceMultivendorRestRoutes\Commands\SparkcommerceMultivendorRestRoutesCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Rahat1994\SparkcommerceMultivendorRestRoutes\Commands\SparkcommerceMultivendorRestRoutesCommand;
 
 class SparkcommerceMultivendorRestRoutesServiceProvider extends PackageServiceProvider
 {
