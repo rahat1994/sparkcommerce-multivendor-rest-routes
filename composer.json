@@ -1,17 +1,17 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "rahat1994/sparkcommerce-multivendor-rest-routes",
+    "description": "This is my package sparkcommerce-multivendor-rest-routes",
     "keywords": [
-        ":vendor_name",
+        "Rahat1994",
         "laravel",
-        ":package_slug"
+        "sparkcommerce-multivendor-rest-routes"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/rahat1994/sparkcommerce-multivendor-rest-routes",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "Rahat Baksh",
+            "email": "rahat392@gmail.com",
             "role": "Developer"
         }
     ],
@@ -35,19 +35,19 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src/",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories/"
+            "Rahat1994\\SparkcommerceMultivendorRestRoutes\\": "src/",
+            "Rahat1994\\SparkcommerceMultivendorRestRoutes\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests/",
+            "Rahat1994\\SparkcommerceMultivendorRestRoutes\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/"
         }
     },
     "scripts": {
         "post-autoload-dump": "@composer run prepare",
-        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "clear": "@php vendor/bin/testbench package:purge-sparkcommerce-multivendor-rest-routes --ansi",
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
         "build": [
             "@composer run prepare",
@@ -73,10 +73,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "Rahat1994\\SparkcommerceMultivendorRestRoutes\\SparkcommerceMultivendorRestRoutesServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
+                "SparkcommerceMultivendorRestRoutes": "Rahat1994\\SparkcommerceMultivendorRestRoutes\\Facades\\SparkcommerceMultivendorRestRoutes"
             }
         }
     },

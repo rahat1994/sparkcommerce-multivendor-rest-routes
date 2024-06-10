@@ -1,6 +1,6 @@
 <?php
 
-namespace VendorName\Skeleton\Database\Factories;
+namespace Rahat1994\SparkcommerceMultivendorRestRoutes\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
