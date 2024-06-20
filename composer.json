@@ -18,7 +18,10 @@
     "require": {
         "php": "^8.2",
         "spatie/laravel-package-tools": "^1.16",
-        "illuminate/contracts": "^10.0||^11.0"
+        "illuminate/contracts": "^10.0||^11.0",
+        "rahat1994/sparkcommerce": "*",
+        "rahat1994/sparkcommerce-rest-routes": "*",
+        "rahat1994/sparkcommerce-multivendor": "*"
     },
     "require-dev": {
         "laravel/pint": "^1.14",
@@ -68,6 +71,20 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "phpstan/extension-installer": true
+        }
+    },
+    "repositories": {
+        "sparkcommerce": {
+            "type": "path",
+            "url": "../sparkcommerce"
+        },
+        "sparkcommerce-multivendor": {
+            "type": "path",
+            "url": "../sparkcommerce-multivendor"
+        },
+        "sparkcommerce-rest-routes": {
+            "type": "path",
+            "url": "../sparkcommerce-rest-routes"
         }
     },
     "extra": {
