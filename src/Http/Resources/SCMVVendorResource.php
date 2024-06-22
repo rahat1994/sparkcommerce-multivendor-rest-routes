@@ -11,10 +11,9 @@ class SCMVVendorResource extends JsonResource
         return [
             'name' => $this->name,
             'slug' => $this->slug,
-            'background_image' => 'https://fastly.picsum.photos/id/63/5000/2813.jpg',
-            'logo' => 'https://fastly.picsum.photos/id/63/5000/2813.jpg',
             'category' => $this->category,
             'address' => 'Dhaka, Bangladesh',
+            'media_urls' => $this->media_urls,
         ];
     }
 }
