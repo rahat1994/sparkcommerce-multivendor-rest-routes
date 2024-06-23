@@ -14,7 +14,7 @@ class VendorController extends Controller
     public function topVendors(Request $request)
     {
         // $topVendors = SCMVVendor::whereJsonContains('meta->is_top_vendor', true)->get();
-        $table = config('sparkcommerce-multivendor.table_prefix') . 'vendors';
+        $table = config('sparkcommerce-multivendor.table_prefix').'vendors';
 
         $topVendors = DB::table($table)->whereJsonContains('meta->is_top_vendor', 1)->get();
 
@@ -42,8 +42,10 @@ class VendorController extends Controller
                     'collection' => $record->collection_name,
                 ];
             })->toArray();
+
             return $vendor;
         });
+
         return SCMVVendorResource::collection($topVendors);
     }
 }
