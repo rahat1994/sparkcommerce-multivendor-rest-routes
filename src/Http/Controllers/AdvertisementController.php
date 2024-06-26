@@ -20,7 +20,6 @@ class AdvertisementController extends Controller
             ->select(DB::raw('MAX(id) as id'))
             ->groupBy('position');
 
-        
         // Main query to get the advertisement details for the latest entries per position
         $advertisements = DB::table($advertiementTable.' as main')
             ->joinSub($latestPerPosition, 'latest', function ($join) {
@@ -33,8 +32,8 @@ class AdvertisementController extends Controller
 
         // Fetch media for these vendors
         $mediaItems = Media::whereIn('model_id', $advertisementIds)
-        ->where('model_type', $modelType)
-        ->get();
+            ->where('model_type', $modelType)
+            ->get();
         // Group media items by model_id for easy assignment
         $mediaByAdvertisement = $mediaItems->groupBy('model_id');
 
@@ -55,6 +54,7 @@ class AdvertisementController extends Controller
 
             return $vendor;
         });
+
         return SCMVAdvertisementResource::collection($advertisements);
     }
 }
