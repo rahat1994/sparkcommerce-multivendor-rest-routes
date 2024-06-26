@@ -11,6 +11,7 @@ class SCMVAdvertisementResource extends JsonResource
         return [
             'name' => $this->name,
             'url' => $this->url,
+            'position' => $this->position,
             'media_urls' => $this->media_urls,
         ];
     }
