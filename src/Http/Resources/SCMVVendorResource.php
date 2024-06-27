@@ -14,6 +14,7 @@ class SCMVVendorResource extends JsonResource
             'category' => $this->category,
             'address' => 'Dhaka, Bangladesh',
             'media_urls' => $this->media_urls,
+            'product_count' => $this->product_count,
         ];
     }
 }

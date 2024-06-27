@@ -25,12 +25,18 @@ class VendorController extends Controller
         $mediaItems = Media::whereIn('model_id', $vendorIds)
             ->where('model_type', $modelType)
             ->get();
+
+        $vendorProducts = DB::table(config('sparkcommerce.table_prefix') . 'products')
+            ->whereIn('vendor_id', $vendorIds)
+            ->get();
         // Group media items by model_id for easy assignment
         $mediaByVendor = $mediaItems->groupBy('model_id');
+        $vendorProducts = $vendorProducts->groupBy('vendor_id');
 
         // Manually attach media items to each vendor
         $topVendors->transform(function ($vendor) use ($mediaByVendor) {
             $vendorMedia = $mediaByVendor[$vendor->id] ?? collect();
+            $vendorProduct = $vendorProducts[$vendor->id] ?? collect();
             // if (!$vendorMedia->isEmpty()) {
             //     dd($vendorMedia);
             // }
@@ -42,8 +48,10 @@ class VendorController extends Controller
                     'collection' => $record->collection_name,
                 ];
             })->toArray();
+            $vendor->product_count = count($vendorProduct);
             return $vendor;
         });
+
         return SCMVVendorResource::collection($topVendors);
     }
 }
