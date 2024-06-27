@@ -12,11 +12,11 @@ class ProductsController extends Controller
     public function productRecomendation(Request $request, $productCount)
     {
         // validate productcount
-        if (!is_numeric($productCount)) {
+        if (! is_numeric($productCount)) {
             return response()->json(['error' => 'Invalid product count'], 400);
         }
 
-        $productTable = config('sparkcommerce.table_prefix') . 'products';
+        $productTable = config('sparkcommerce.table_prefix').'products';
         $products = DB::table($productTable)->inRandomOrder()->limit($productCount)->get();
 
         return SCProductResource::collection($products);

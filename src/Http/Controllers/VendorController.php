@@ -48,6 +48,7 @@ class VendorController extends Controller
                     'collection' => $record->collection_name,
                 ];
             })->toArray();
+
             $vendor->product_count = count($vendorProduct);
             return $vendor;
         });
