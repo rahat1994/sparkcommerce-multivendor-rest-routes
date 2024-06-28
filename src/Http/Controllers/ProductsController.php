@@ -22,7 +22,7 @@ class ProductsController extends Controller
             ->inRandomOrder()
             ->limit($productCount)
             ->get();
-        // dd($products)  ;
+        // dd($products);
         return SCMVProductResource::collection($products);
     }
 }

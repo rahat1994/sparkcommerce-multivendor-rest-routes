@@ -12,7 +12,7 @@ class SCMVProductResource extends SCProductResource{
     {
         $productResource = parent::toArray($request);
         return array_merge($productResource, [
-            'vendor' => $this->sCMVVendor,
+            'vendor' => SCMVVendorResource::make($this->sCMVVendor) ,
         ]);
     }
     
