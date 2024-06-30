@@ -12,15 +12,14 @@ class ProductsController extends Controller
     public function productRecomendation(Request $request, $productCount)
     {
         // validate productcount
-        if (!is_numeric($productCount)) {
+        if (! is_numeric($productCount)) {
             return response()->json(['error' => 'Invalid product count'], 400);
         }
-
-
 
         $products = SCProduct::with('sCMVVendor', 'categories')
             ->limit($productCount)
             ->get();
+
         // dd($products);
         return SCMVProductResource::collection($products);
     }
