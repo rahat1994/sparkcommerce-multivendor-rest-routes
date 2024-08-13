@@ -32,12 +32,12 @@ class ProductsController extends Controller
     public function searchProdcuts(Request $request, $vendor_slug, $search_term)
     {
         $vendor = SCMVVendor::where('slug', $vendor_slug)->first();
-        if (!$vendor) {
+        if (! $vendor) {
             return response()->json(['message' => 'Vendor not found'], 404);
         }
 
         $products = $vendor->scproducts()
-            ->where('name', 'like', '%' . $search_term . '%')
+            ->where('name', 'like', '%'.$search_term.'%')
             ->with('sCMVVendor', 'categories')
             ->paginate(2);
 
@@ -46,7 +46,7 @@ class ProductsController extends Controller
 
     public function gloalSearch(Request $request)
     {
-        $products = SCProduct::where('name', 'like', '%' . $request->search_term . '%')
+        $products = SCProduct::where('name', 'like', '%'.$request->search_term.'%')
             ->with('sCMVVendor', 'categories')
             ->paginate(10);
 
@@ -56,7 +56,7 @@ class ProductsController extends Controller
     public function products(Request $request, $vendor_slug)
     {
         $vendor = SCMVVendor::where('slug', $vendor_slug)->first();
-        if (!$vendor) {
+        if (! $vendor) {
             return response()->json(['message' => 'Vendor not found'], 404);
         }
         $products = $vendor->scproducts()
@@ -71,7 +71,7 @@ class ProductsController extends Controller
     public function product(Request $request, $vendor_slug, $product_slug)
     {
         $vendor = SCMVVendor::where('slug', $vendor_slug)->first();
-        if (!$vendor) {
+        if (! $vendor) {
             return response()->json(['message' => 'Vendor not found'], 404);
         }
 
@@ -80,7 +80,7 @@ class ProductsController extends Controller
             ->with('sCMVVendor', 'categories')
             ->first();
 
-        if (!$product) {
+        if (! $product) {
             return response()->json(['message' => 'Product not found'], 404);
         }
 

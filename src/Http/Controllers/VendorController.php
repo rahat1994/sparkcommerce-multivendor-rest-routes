@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Rahat1994\SparkcommerceMultivendor\Models\SCMVVendor;
-use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Resources\SCMVProductResource;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Resources\SCMVVendorResource;
 use Rahat1994\SparkcommerceRestRoutes\Http\Resources\SCCategoryResource;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -16,7 +15,7 @@ class VendorController extends Controller
     public function topVendors(Request $request)
     {
         // $topVendors = SCMVVendor::whereJsonContains('meta->is_top_vendor', true)->get();
-        $table = config('sparkcommerce-multivendor.table_prefix') . 'vendors';
+        $table = config('sparkcommerce-multivendor.table_prefix').'vendors';
 
         $topVendors = DB::table($table)->whereJsonContains('meta->is_top_vendor', 1)->get();
 
@@ -28,7 +27,7 @@ class VendorController extends Controller
             ->where('model_type', $modelType)
             ->get();
 
-        $vendorProducts = DB::table(config('sparkcommerce.table_prefix') . 'products')
+        $vendorProducts = DB::table(config('sparkcommerce.table_prefix').'products')
             ->whereIn('vendor_id', $vendorIds)
             ->get();
         // Group media items by model_id for easy assignment
@@ -62,7 +61,7 @@ class VendorController extends Controller
     public function show(Request $request, $vendor_slug)
     {
         $vendor = SCMVVendor::where('slug', $vendor_slug)->first();
-        if (!$vendor) {
+        if (! $vendor) {
             return response()->json(['message' => 'Vendor not found'], 404);
         }
 
@@ -72,10 +71,11 @@ class VendorController extends Controller
     public function categories(Request $request, $vendor_slug)
     {
         $vendor = SCMVVendor::where('slug', $vendor_slug)->first();
-        if (!$vendor) {
+        if (! $vendor) {
             return response()->json(['message' => 'Vendor not found'], 404);
         }
         $categories = $vendor->sccategories()->with('childrenRecursive')->whereNull('parent_id')->get();
+
         return SCCategoryResource::collection($categories);
     }
 }
