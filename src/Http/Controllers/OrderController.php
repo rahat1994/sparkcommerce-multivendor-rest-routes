@@ -48,17 +48,17 @@ class OrderController extends Controller
 
     }
 
-    public function cancelOrder($trackingNumber){
+    public function cancelOrder($trackingNumber)
+    {
         // $order = SCOrder::where('tracking_number', $trackingNumber)
         // ->where('user_id', $user->id)
         // ->firstOrFail();
     }
 
-    public function updateOrder($trackingNumber){
+    public function updateOrder($trackingNumber)
+    {
         // $order = SCOrder::where('tracking_number', $trackingNumber)
         // ->where('user_id', $user->id)
         // ->firstOrFail();
     }
-
-    
 }
