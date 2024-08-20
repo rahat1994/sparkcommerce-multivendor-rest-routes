@@ -24,7 +24,8 @@ Route::group(['prefix' => 'scmv/v1'], function () {
         Route::get('/{vendor_slug}/search/{search_term}', [ProductsController::class, 'searchProdcuts']);
     });
 
-    Route::group(['prefix' => 'orders'], function(){
+    Route::group(['prefix' => 'orders', 'middleware' => 'auth:sanctum'], function(){
         Route::get('/', [OrderController::class, 'index']);
+        Route::get('/{trackingNumber}',[OrderController::class, 'show']);
     });
 });
