@@ -2,10 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers\AdvertisementController;
+use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers\OrderController;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers\ProductsController;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers\ShopCategoryController;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers\VendorController;
-use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers\OrderController;
 
 Route::group(['prefix' => 'scmv/v1'], function () {
     Route::get('/shop_categories', [ShopCategoryController::class, 'index']);
@@ -24,7 +24,7 @@ Route::group(['prefix' => 'scmv/v1'], function () {
         Route::get('/{vendor_slug}/search/{search_term}', [ProductsController::class, 'searchProdcuts']);
     });
 
-    Route::group(['prefix' => 'orders'], function(){
+    Route::group(['prefix' => 'orders'], function () {
         Route::get('/', [OrderController::class, 'index']);
     });
 });
