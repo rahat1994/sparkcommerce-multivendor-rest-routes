@@ -5,6 +5,7 @@ use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers\AdvertisementC
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers\ProductsController;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers\ShopCategoryController;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers\VendorController;
+use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers\OrderController;
 
 Route::group(['prefix' => 'scmv/v1'], function () {
     Route::get('/shop_categories', [ShopCategoryController::class, 'index']);
@@ -13,6 +14,7 @@ Route::group(['prefix' => 'scmv/v1'], function () {
     Route::get('/product_recomedation/{product_count}', [ProductsController::class, 'productRecomendation']);
 
     Route::get('/search/{search_term}', [ProductsController::class, 'gloalSearch']);
+
     Route::group(['prefix' => 'vendor'], function () {
         Route::get('/{vendor_slug}', [VendorController::class, 'show']);
         Route::get('/{vendor_slug}/products', [ProductsController::class, 'products']);
@@ -20,5 +22,9 @@ Route::group(['prefix' => 'scmv/v1'], function () {
         Route::get('/{vendor_slug}/categories', [VendorController::class, 'categories']);
         Route::get('/{vendor_slug}/categories/{category_id}', [VendorController::class, 'category']);
         Route::get('/{vendor_slug}/search/{search_term}', [ProductsController::class, 'searchProdcuts']);
+    });
+
+    Route::group(['prefix' => 'orders'], function(){
+        Route::get('/', [OrderController::class, 'index']);
     });
 });
