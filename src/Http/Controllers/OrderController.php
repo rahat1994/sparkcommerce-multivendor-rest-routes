@@ -24,13 +24,14 @@ class OrderController extends Controller
         // return ShopCategoryResource::collection($topTenShopCategories);
     }
 
-    public function show(Request $request, $trackingNumber){
+    public function show(Request $request, $trackingNumber)
+    {
         $user = Auth::guard('sanctum')->user();
 
         try {
             $order = SCOrder::where('tracking_number', $trackingNumber)
                 ->where('user_id', $user->id)
-                ->firstOrFail();    
+                ->firstOrFail();
 
             // dd($order);
             return SCOrderResource::make($order);
@@ -44,7 +45,6 @@ class OrderController extends Controller
                 404
             );
         }
-        
 
     }
 }
