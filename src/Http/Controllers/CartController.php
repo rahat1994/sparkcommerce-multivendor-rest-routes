@@ -11,23 +11,22 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Rahat1994\SparkCommerce\Models\SCProduct;
-use Rahat1994\SparkcommerceRestRoutes\Http\Resources\SCProductResource;
 use Illuminate\Support\Str;
 use Rahat1994\SparkCommerce\Models\SCAnonymousCart;
 use Rahat1994\SparkCommerce\Models\SCCoupon;
 use Rahat1994\SparkCommerce\Models\SCOrder;
+use Rahat1994\SparkCommerce\Models\SCProduct;
 use Rahat1994\SparkcommerceMultivendor\Models\SCMVVendor;
+use Rahat1994\SparkcommerceRestRoutes\Http\Resources\SCProductResource;
 
 class CartController extends Controller
 {
-
     protected function user()
     {
         return Auth::guard('sanctum')->user();
     }
 
-    public function  getCart(Request $request, $refernce = null)
+    public function getCart(Request $request, $refernce = null)
     {
         $user = $this->user();
         if ($user !== null) {
@@ -37,13 +36,13 @@ class CartController extends Controller
 
             return response()->json(
                 [
-                    'cart' => $cart
+                    'cart' => $cart,
                 ],
                 200
             );
         } else {
             try {
-                $project = strval(config("app.name"));
+                $project = strval(config('app.name'));
                 $hashIds = new Hashids($project);
                 $anonymousCartId = $hashIds->decode($refernce);
                 // dd($anonymousCartId);
@@ -58,7 +57,7 @@ class CartController extends Controller
                     [
                         'message' => 'Product added to cart successfully',
                         'refernce' => $refernce,
-                        'cart' => $cart
+                        'cart' => $cart,
                     ],
                     200
                 );
@@ -67,7 +66,7 @@ class CartController extends Controller
                 return response()->json(
                     [
                         'message' => 'Cart not found',
-                        'cart' => []
+                        'cart' => [],
                     ],
                     404
                 );
@@ -80,7 +79,7 @@ class CartController extends Controller
         $request->validate([
             'slug' => 'required|string',
             'quantity' => 'required|integer|min:1',
-            'replace_existing' => 'boolean'
+            'replace_existing' => 'boolean',
         ]);
 
         $replaceExisting = is_null($request->replace_existing) ? false : true;
@@ -93,7 +92,7 @@ class CartController extends Controller
                 return response()->json(
                     [
                         'message' => 'Product not found',
-                        'cart' => []
+                        'cart' => [],
                     ],
                     404
                 );
@@ -114,7 +113,7 @@ class CartController extends Controller
                     return response()->json(
                         [
                             'message' => 'You can not add products from different vendors in the same cart',
-                            'cart' => $this->loadCartWithAllItems($cart)
+                            'cart' => $this->loadCartWithAllItems($cart),
                         ],
                         400
                     );
@@ -128,21 +127,22 @@ class CartController extends Controller
                 $cart->items()->save($cartItem);
             }
             $cart = $this->loadCartWithAllItems($cart);
+
             // dd($cart);
             return response()->json(
                 [
                     'message' => 'Product added to cart successfully',
-                    'cart' => $cart
+                    'cart' => $cart,
                 ],
                 200
             );
         } else {
-            $project = strval(config("app.name"));
+            $project = strval(config('app.name'));
             $hashIds = new Hashids($project);
 
             if (is_null($refernce)) {
 
-                $cart = new SCAnonymousCart();
+                $cart = new SCAnonymousCart;
                 $cart->cart_content = [];
                 $cart->save();
                 $refernce = $hashIds->encode($cart->id);
@@ -160,7 +160,7 @@ class CartController extends Controller
                 return response()->json(
                     [
                         'message' => 'Product not found',
-                        'cart' => []
+                        'cart' => [],
                     ],
                     404
                 );
@@ -185,7 +185,7 @@ class CartController extends Controller
             } else {
                 $cartItems[] = [
                     'slug' => $product->slug,
-                    'quantity' => $request->quantity
+                    'quantity' => $request->quantity,
                 ];
             }
 
@@ -197,7 +197,7 @@ class CartController extends Controller
                 [
                     'message' => 'Product added to cart successfully',
                     'refernce' => $refernce,
-                    'cart' => $cart
+                    'cart' => $cart,
                 ],
                 200
             );
@@ -212,6 +212,7 @@ class CartController extends Controller
                 return true;
             }
         }
+
         return false;
     }
 
@@ -229,17 +230,18 @@ class CartController extends Controller
             $cart->removeItem($cartItem[0]);
 
             $cart = $this->loadCartWithAllItems($cart);
+
             return response()->json(
                 [
                     'message' => 'Product removed from cart successfully',
-                    'cart' => $cart
+                    'cart' => $cart,
                 ],
                 200
             );
         } else {
 
             try {
-                $project = strval(config("app.name"));
+                $project = strval(config('app.name'));
                 $hashIds = new Hashids($project);
                 $anonymousCartId = $hashIds->decode($refernce);
                 // dd($anonymousCartId);
@@ -254,7 +256,7 @@ class CartController extends Controller
                     return response()->json(
                         [
                             'message' => 'Product not found',
-                            'cart' => []
+                            'cart' => [],
                         ],
                         404
                     );
@@ -280,7 +282,7 @@ class CartController extends Controller
                     return response()->json(
                         [
                             'message' => 'Product not found in cart',
-                            'refernce' => $refernce
+                            'refernce' => $refernce,
                         ],
                         200
                     );
@@ -294,7 +296,7 @@ class CartController extends Controller
                     [
                         'message' => 'Product removed from cart successfully',
                         'refernce' => $refernce,
-                        'cart' => $cart
+                        'cart' => $cart,
                     ],
                     200
                 );
@@ -303,7 +305,7 @@ class CartController extends Controller
                 return response()->json(
                     [
                         'message' => 'Cart not found',
-                        'cart' => []
+                        'cart' => [],
                     ],
                     404
                 );
@@ -313,7 +315,7 @@ class CartController extends Controller
 
     public function decodeAnonymousCartReferenceId($refernce)
     {
-        $project = strval(config("app.name"));
+        $project = strval(config('app.name'));
         $hashIds = new Hashids($project);
         $anonymousCartId = $hashIds->decode($refernce);
 
@@ -331,7 +333,7 @@ class CartController extends Controller
         return response()->json(
             [
                 'message' => 'Cart cleared successfully',
-                'cart' => []
+                'cart' => [],
             ],
             200
         );
@@ -387,7 +389,7 @@ class CartController extends Controller
         return response()->json(
             [
                 'message' => 'Cart associated successfully',
-                'cart' => $cart
+                'cart' => $cart,
             ],
             200
         );
@@ -413,7 +415,6 @@ class CartController extends Controller
         return $cartItems;
     }
 
-
     private function loadCartWithAllItems(Cart $cart)
     {
         $cartItems = [];
@@ -434,14 +435,14 @@ class CartController extends Controller
     {
         $request->validate([
             'coupon_code' => 'required|string',
-            'vendor_slug' => 'required|string'
+            'vendor_slug' => 'required|string',
         ]);
 
         if ($this->validateCoupons($request->coupon_code, $request->vendor_slug)) {
             return response()->json(
                 [
                     'message' => 'Coupon applied successfully',
-                    'cart' => []
+                    'cart' => [],
                 ],
                 200
             );
@@ -449,7 +450,7 @@ class CartController extends Controller
             return response()->json(
                 [
                     'message' => 'Invalid coupon code',
-                    'cart' => []
+                    'cart' => [],
                 ],
                 400
             );
@@ -464,7 +465,7 @@ class CartController extends Controller
                 ->with([
                     'SCCoupons' => function ($query) use ($couponCode) {
                         $query->where('coupon_code', $couponCode);
-                    }
+                    },
                 ])
                 ->firstOrFail();
             dd($vendorWithCoupon);
@@ -485,14 +486,14 @@ class CartController extends Controller
     {
         // dd($request->all());
         $request->validate([
-            "items" => "required|array",
-            "shipping_address" => "required",
-            "billing_address" => "required",
-            "shipping_method" => "required",
-            "total_amount" => "required",
-            "discount" => "sometimes",
-            "payment_method" => "required",
-            "transaction_id" => "required",
+            'items' => 'required|array',
+            'shipping_address' => 'required',
+            'billing_address' => 'required',
+            'shipping_method' => 'required',
+            'total_amount' => 'required',
+            'discount' => 'sometimes',
+            'payment_method' => 'required',
+            'transaction_id' => 'required',
         ]);
 
         $user = $this->user();
@@ -510,7 +511,7 @@ class CartController extends Controller
                 return response()->json(
                     [
                         'message' => 'Product not found',
-                        'cart' => []
+                        'cart' => [],
                     ],
                     404
                 );
@@ -518,7 +519,7 @@ class CartController extends Controller
                 return response()->json(
                     [
                         'message' => $th->getMessage(),
-                        'cart' => []
+                        'cart' => [],
                     ],
                     404
                 );
@@ -527,15 +528,15 @@ class CartController extends Controller
             $total_amount += ($product->getPrice() * $item['quantity']);
         }
 
-        if (!$cart || $cart->items->isEmpty()) {
-            throw new Exception("Cart is empty or not found.");
+        if (! $cart || $cart->items->isEmpty()) {
+            throw new Exception('Cart is empty or not found.');
         }
 
         // Begin database transaction to ensure data integrity
         DB::beginTransaction();
         try {
             // Create a new Order
-            $order = new SCOrder();
+            $order = new SCOrder;
             $order->user_id = $user->id;
             $order->status = 'pending';
             $order->items = $cart->items;
