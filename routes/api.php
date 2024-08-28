@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers\AdvertisementController;
+use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers\CartController;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers\ProductsController;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers\ShopCategoryController;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers\VendorController;
@@ -21,4 +22,10 @@ Route::group(['prefix' => 'scmv/v1'], function () {
         Route::get('/{vendor_slug}/categories/{category_id}', [VendorController::class, 'category']);
         Route::get('/{vendor_slug}/search/{search_term}', [ProductsController::class, 'searchProdcuts']);
     });
+
+    Route::get('/cart/{reference?}', [CartController::class, 'getCart']);
+    Route::post('/cart/{reference?}', [CartController::class, 'addToCart']);
+
+    Route::delete('/cart/clear_all', [CartController::class, 'clearUserCart']);
+    Route::delete('/cart/{slug}/{reference?}', [CartController::class, 'removeFromCart']);
 });
