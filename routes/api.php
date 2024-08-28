@@ -25,7 +25,6 @@ Route::group(['prefix' => 'scmv/v1'], function () {
         Route::get('/{vendor_slug}/search/{search_term}', [ProductsController::class, 'searchProdcuts']);
     });
 
-
     Route::get('/cart/{reference?}', [CartController::class, 'getCart']);
     Route::post('/cart/{reference?}', [CartController::class, 'addToCart']);
 
