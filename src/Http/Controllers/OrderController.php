@@ -6,6 +6,7 @@ use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Rahat1994\SparkCommerce\Models\SCOrder;
+use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Resources\SCMVOrderResource;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Resources\ShopCategoryResource;
 use Rahat1994\SparkcommerceRestRoutes\Http\Resources\SCOrderResource;
 
@@ -19,7 +20,7 @@ class OrderController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate();
 
-        return SCOrderResource::collection($orders);
+        return SCMVOrderResource::collection($orders);
 
         // return ShopCategoryResource::collection($topTenShopCategories);
     }
@@ -32,9 +33,8 @@ class OrderController extends Controller
             $order = SCOrder::where('tracking_number', $trackingNumber)
                 ->where('user_id', $user->id)
                 ->firstOrFail();
-
-            // dd($order);
-            return SCOrderResource::make($order);
+                
+            return SCMVOrderResource::make($order);
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json(
