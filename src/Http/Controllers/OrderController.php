@@ -8,7 +8,6 @@ use Illuminate\Routing\Controller;
 use Rahat1994\SparkCommerce\Models\SCOrder;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Resources\SCMVOrderResource;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Resources\ShopCategoryResource;
-use Rahat1994\SparkcommerceRestRoutes\Http\Resources\SCOrderResource;
 
 class OrderController extends Controller
 {
@@ -33,7 +32,7 @@ class OrderController extends Controller
             $order = SCOrder::where('tracking_number', $trackingNumber)
                 ->where('user_id', $user->id)
                 ->firstOrFail();
-                
+
             return SCMVOrderResource::make($order);
         } catch (\Throwable $th) {
             //throw $th;
