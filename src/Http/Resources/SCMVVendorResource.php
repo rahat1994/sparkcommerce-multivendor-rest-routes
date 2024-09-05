@@ -11,12 +11,12 @@ class SCMVVendorResource extends JsonResource
     {
         // dd(json_decode($this->meta, true));
 
-        if(!is_array($this->meta)) {
+        if (! is_array($this->meta)) {
             $meta = json_encode($this->meta);
         } else {
             $meta = $this->meta;
         }
-        
+
         $postcodes_covered = Arr::get($meta, 'postcodes', []);
         $delivery_days = Arr::get($meta, 'delivery_days', []);
 
