@@ -51,10 +51,10 @@ class VendorController extends Controller
             })->toArray();
 
             $vendor->product_count = count($vendorProduct);
-
+            
             return $vendor;
         });
-
+        // dd($topVendors);
         return SCMVVendorResource::collection($topVendors);
     }
 

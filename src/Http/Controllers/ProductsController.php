@@ -20,12 +20,7 @@ class ProductsController extends Controller
         $products = SCProduct::with('sCMVVendor', 'categories')
             ->limit($productCount)
             ->get();
-
-        // $product = SCProduct::find(18);
-
-        // dd($product->hasMedia('product_image')->collection('product_image')->first()->getUrl());
-
-        // dd($products);
+            
         return SCMVProductResource::collection($products);
     }
 
