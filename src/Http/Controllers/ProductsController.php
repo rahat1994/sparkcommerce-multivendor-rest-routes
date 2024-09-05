@@ -20,7 +20,7 @@ class ProductsController extends Controller
         $products = SCProduct::with('sCMVVendor', 'categories')
             ->limit($productCount)
             ->get();
-            
+
         return SCMVProductResource::collection($products);
     }
 
