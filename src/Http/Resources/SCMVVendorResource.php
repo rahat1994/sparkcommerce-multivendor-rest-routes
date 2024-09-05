@@ -12,7 +12,7 @@ class SCMVVendorResource extends JsonResource
         // dd(json_decode($this->meta, true));
 
         if (! is_array($this->meta)) {
-            $meta = json_encode($this->meta);
+            $meta = json_decode($this->meta, true);
         } else {
             $meta = $this->meta;
         }
