@@ -20,13 +20,22 @@ class SCMVVendorResource extends JsonResource
         $postcodes_covered = Arr::get($meta, 'postcodes', []);
         $delivery_days = Arr::get($meta, 'delivery_days', []);
 
+        $media_urls = [];
+
+        foreach ($this->media as $media) {
+            $media_urls[] = [
+                'collection' => $media->collection_name,
+                'url' => $media->getUrl(),
+            ];
+        }
+
         return [
             'name' => $this->name,
             'slug' => $this->slug,
             'category' => $this->category,
             'address' => $this->address,
-            'media_urls' => $this->media_urls,
-            'product_count' => $this->product_count,
+            'media_urls' => $media_urls,
+            'product_count' => $this->sCProducts->count(),
             'contact_number' => $this->contact_number,
             'email' => $this->email,
             'postcodes_covered' => $postcodes_covered,
