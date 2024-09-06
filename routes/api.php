@@ -10,7 +10,7 @@ use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers\VendorControll
 
 Route::group(['prefix' => 'scmv/v1'], function () {
     Route::get('/shop_categories', [ShopCategoryController::class, 'index']);
-    Route::get('/top_vendors', [VendorController::class, 'topVendors']);    
+    Route::get('/top_vendors', [VendorController::class, 'topVendors']);
     Route::get('/advertisements', [AdvertisementController::class, 'advertisements']);
     Route::get('/product_recomedation/{product_count}', [ProductsController::class, 'productRecomendation']);
 

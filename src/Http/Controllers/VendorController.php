@@ -23,6 +23,7 @@ class VendorController extends Controller
     {
         $vendors = SCMVVendor::with('media', 'sCProducts')
             ->get();
+
         return SCMVVendorResource::collection($vendors);
     }
 
@@ -35,9 +36,10 @@ class VendorController extends Controller
         $category = $data['category'];
         $vendors = SCMVVendor::with('media', 'sCProducts')
             ->when($category, function ($query, $category) {
-                return $query->where('category', 'like', '%"' . $category . '"%');
+                return $query->where('category', 'like', '%"'.$category.'"%');
             })
             ->get();
+
         return SCMVVendorResource::collection($vendors);
     }
 
