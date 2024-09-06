@@ -21,7 +21,23 @@ class VendorController extends Controller
 
     public function index(Request $request)
     {
-        $vendors = SCMVVendor::with('media', 'sCProducts')->get();
+        $vendors = SCMVVendor::with('media', 'sCProducts')
+            ->get();
+        return SCMVVendorResource::collection($vendors);
+    }
+
+    public function search(Request $request, $category = null)
+    {
+        $validator = validator()->make(['category' => $category], [
+            'category' => 'nullable|string',
+        ]);
+        $data = $validator->validate();
+        $category = $data['category'];
+        $vendors = SCMVVendor::with('media', 'sCProducts')
+            ->when($category, function ($query, $category) {
+                return $query->where('category', 'like', '%"' . $category . '"%');
+            })
+            ->get();
         return SCMVVendorResource::collection($vendors);
     }
 
