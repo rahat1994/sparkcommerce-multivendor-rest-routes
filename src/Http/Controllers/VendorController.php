@@ -19,6 +19,12 @@ class VendorController extends Controller
         return SCMVVendorResource::collection($topVendors);
     }
 
+    public function index(Request $request)
+    {
+        $vendors = SCMVVendor::with('media', 'sCProducts')->get();
+        return SCMVVendorResource::collection($vendors);
+    }
+
     public function show(Request $request, $vendor_slug)
     {
         $vendor = SCMVVendor::where('slug', $vendor_slug)->first();
