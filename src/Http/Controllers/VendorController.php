@@ -21,6 +21,7 @@ class VendorController extends Controller
 
     public function index(Request $request)
     {
+
         $vendors = SCMVVendor::with('media', 'sCProducts')
             ->get();
 
@@ -40,6 +41,7 @@ class VendorController extends Controller
             })
             ->get();
 
+        $vendors = SCMVVendor::with('media', 'sCProducts')->get();
         return SCMVVendorResource::collection($vendors);
     }
 
