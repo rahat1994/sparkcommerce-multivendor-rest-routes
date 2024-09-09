@@ -50,40 +50,40 @@ class ProductsController extends Controller
 
     public function products(Request $request, $vendor_slug)
     {
-                // Validate category query parameters
-                $validatedData = $request->validate([
-                    'categories' => 'nullable|string',
-                    'search' => 'nullable|string',
-                ]);
-        
-                // Find the vendor by slug
-                $vendor = SCMVVendor::where('slug', $vendor_slug)->firstOrFail();
-        
-                // Initialize the query builder for products
-                $query = SCProduct::where('vendor_id', $vendor->id)
-                    ->with('sCMVVendor', 'categories');
-        
-                // Filter by categories if provided
-                if (isset($validatedData['categories'])) {
-                    $categories = explode(',', $validatedData['categories']);
-                    $query->whereHas('categories', function ($q) use ($categories) {
-                        $q->whereIn('slug', $categories);
-                    });
-                }
-        
-                // Search by product name or description if provided
-                if (isset($validatedData['search'])) {
-                    $search = $validatedData['search'];
-                    $query->where(function ($q) use ($search) {
-                        $q->where('name', 'like', '%' . $search . '%');
-                    });
-                }
-        
-                // Paginate the results
-                $products = $query->paginate(10);
-        
-                // Return the products as a resource collection
-                return SCMVProductResource::collection($products);
+        // Validate category query parameters
+        $validatedData = $request->validate([
+            'categories' => 'nullable|string',
+            'search' => 'nullable|string',
+        ]);
+
+        // Find the vendor by slug
+        $vendor = SCMVVendor::where('slug', $vendor_slug)->firstOrFail();
+
+        // Initialize the query builder for products
+        $query = SCProduct::where('vendor_id', $vendor->id)
+            ->with('sCMVVendor', 'categories');
+
+        // Filter by categories if provided
+        if (isset($validatedData['categories'])) {
+            $categories = explode(',', $validatedData['categories']);
+            $query->whereHas('categories', function ($q) use ($categories) {
+                $q->whereIn('slug', $categories);
+            });
+        }
+
+        // Search by product name or description if provided
+        if (isset($validatedData['search'])) {
+            $search = $validatedData['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%'.$search.'%');
+            });
+        }
+
+        // Paginate the results
+        $products = $query->paginate(10);
+
+        // Return the products as a resource collection
+        return SCMVProductResource::collection($products);
     }
 
     public function product(Request $request, $vendor_slug, $product_slug)
