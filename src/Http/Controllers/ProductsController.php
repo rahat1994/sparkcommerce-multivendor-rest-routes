@@ -50,6 +50,32 @@ class ProductsController extends Controller
 
     public function products(Request $request, $vendor_slug)
     {
+        // validate category query parameters
+        $validatedData = $request->validate([
+            'categories' => 'string',
+        ]);
+        // look for category query parameters
+        if (isset($validatedData['categories'])) {
+
+            // you will get categories as a string separated by comma
+            $categories = explode(',', $request->categories);
+
+            $vendor = SCMVVendor::where('slug', $vendor_slug)->first();
+
+            if (! $vendor) {
+                return response()->json(['message' => 'Vendor not found'], 404);
+            }
+
+            $products = $vendor->scproducts()
+                ->whereHas('categories', function ($query) use ($categories) {
+                    $query->whereIn('slug', $categories);
+                })
+                ->with('sCMVVendor', 'categories')
+                ->paginate(10);
+
+            return SCMVProductResource::collection($products);
+        }
+
         $vendor = SCMVVendor::where('slug', $vendor_slug)->first();
         if (! $vendor) {
             return response()->json(['message' => 'Vendor not found'], 404);
