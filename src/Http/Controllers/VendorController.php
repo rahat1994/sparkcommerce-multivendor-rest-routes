@@ -42,6 +42,7 @@ class VendorController extends Controller
             ->get();
 
         $vendors = SCMVVendor::with('media', 'sCProducts')->get();
+
         return SCMVVendorResource::collection($vendors);
     }
 
