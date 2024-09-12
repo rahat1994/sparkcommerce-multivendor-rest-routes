@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Exceptions\VendorNotSameException;
+use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Resources\SCMVProductResource;
 use Rahat1994\SparkcommerceRestRoutes\Http\Controllers\CartController as SCCartController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +24,8 @@ use Rahat1994\SparkcommerceRestRoutes\Http\Resources\SCProductResource;
 
 class CartController extends SCCartController
 {
-
+    protected $vendorId;
+    protected $vendorModel;
     
     public function productHasDifferentVendor($product, $cart)
     {
@@ -50,5 +52,37 @@ class CartController extends SCCartController
         ];
 
         return $data;
+    }
+
+    protected function beforeProcessingCheckoutCartItems($items)
+    {
+        try {
+            $cart = Cart::query()->firstOrCreate(['user_id' => Auth::id()]);
+            $cartItems = $cart->items()->get();
+            $vendorId = null;
+            foreach ($cartItems as $item) {
+                $vendorId = $item->itemable->vendor_id;
+            }
+            $this->vendorId = $vendorId;
+            return $items;
+            
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+
+    }
+
+    protected function beforeOrderIsSaved(array $orderData): array
+    {
+        $orderData['vendor_id'] = $this->vendorId;        
+        return $orderData;
+    }
+
+    protected function getResourceClassMapping(): array
+    {
+        return [
+            SCProduct::class => SCMVProductResource::class,
+            // 'another_item_type' => AnotherResource::class, // Example of another item type
+        ];
     }
 }
