@@ -8,7 +8,7 @@ use Rahat1994\SparkcommerceRestRoutes\Http\Resources\SCCategoryResource;
 use Rahat1994\SparkcommerceRestRoutes\Http\Controllers\CategoryController as SCCategoryController;
 class CategoryController extends SCCategoryController
 {
-    public function index(Request $request, $vendor_id)
+    public function categoriesByVendorId(Request $request, $vendor_id)
     {
         $categories = SCCategory::where('vendor_id', $vendor_id)
             ->with('childrenRecursive')
