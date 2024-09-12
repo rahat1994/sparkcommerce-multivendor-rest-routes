@@ -2,31 +2,17 @@
 
 namespace Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers;
 
-use Binafy\LaravelCart\Models\Cart;
-use Binafy\LaravelCart\Models\CartItem;
-use Exception;
-use Hashids\Hashids;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Rahat1994\SparkCommerce\Models\SCProduct;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Exceptions\VendorNotSameException;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Resources\SCMVProductResource;
 use Rahat1994\SparkcommerceRestRoutes\Http\Controllers\CartController as SCCartController;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use Rahat1994\SparkCommerce\Models\SCAnonymousCart;
-use Rahat1994\SparkCommerce\Models\SCCoupon;
-use Rahat1994\SparkCommerce\Models\SCOrder;
-use Rahat1994\SparkCommerce\Models\SCProduct;
-use Rahat1994\SparkcommerceMultivendor\Models\SCMVVendor;
-use Rahat1994\SparkcommerceRestRoutes\Http\Resources\SCProductResource;
 
 class CartController extends SCCartController
 {
     protected $vendorId;
     protected $vendorModel;
     
+
     public function productHasDifferentVendor($product, $cart)
     {
         $cartItems = $cart->items()->get();
@@ -82,7 +68,6 @@ class CartController extends SCCartController
     {
         return [
             SCProduct::class => SCMVProductResource::class,
-            // 'another_item_type' => AnotherResource::class, // Example of another item type
         ];
     }
 }
