@@ -53,5 +53,5 @@ Route::group(['prefix' => 'sc/v1'], function () {
     Route::delete('/cart/{slug}/{reference?}', [CartController::class, 'removeFromCart']);
 
     Route::post('/validate-coupon', [CartController::class, 'validateCoupon']);
-    Route::get('/categories/{vendor_id}', [CategoryController::class, 'index']);
+    Route::get('/categories/{vendor_id}', [CategoryController::class, 'categoriesByVendorId']);
 });
