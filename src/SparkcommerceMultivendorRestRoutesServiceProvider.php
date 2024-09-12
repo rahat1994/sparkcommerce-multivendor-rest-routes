@@ -19,7 +19,7 @@ class SparkcommerceMultivendorRestRoutesServiceProvider extends PackageServicePr
             ->name('sparkcommerce-multivendor-rest-routes')
             ->hasConfigFile()
             ->hasViews()
-            ->hasRoute('api')
+            ->hasRoutes(['api'])
             ->hasMigration('create_sparkcommerce-multivendor-rest-routes_table')
             ->hasCommand(SparkcommerceMultivendorRestRoutesCommand::class);
     }
