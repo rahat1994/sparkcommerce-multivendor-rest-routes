@@ -10,8 +10,8 @@ use Rahat1994\SparkcommerceRestRoutes\Http\Controllers\CartController as SCCartC
 class CartController extends SCCartController
 {
     protected $vendorId;
+
     protected $vendorModel;
-    
 
     public function productHasDifferentVendor($product, $cart)
     {
@@ -50,8 +50,9 @@ class CartController extends SCCartController
                 $vendorId = $item->itemable->vendor_id;
             }
             $this->vendorId = $vendorId;
+
             return $items;
-            
+
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -60,7 +61,8 @@ class CartController extends SCCartController
 
     protected function beforeOrderIsSaved(array $orderData): array
     {
-        $orderData['vendor_id'] = $this->vendorId;        
+        $orderData['vendor_id'] = $this->vendorId;
+
         return $orderData;
     }
 

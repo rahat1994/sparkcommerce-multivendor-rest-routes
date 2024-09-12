@@ -4,8 +4,9 @@ namespace Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Rahat1994\SparkCommerce\Models\SCCategory;
-use Rahat1994\SparkcommerceRestRoutes\Http\Resources\SCCategoryResource;
 use Rahat1994\SparkcommerceRestRoutes\Http\Controllers\CategoryController as SCCategoryController;
+use Rahat1994\SparkcommerceRestRoutes\Http\Resources\SCCategoryResource;
+
 class CategoryController extends SCCategoryController
 {
     public function index(Request $request, $vendor_id)
@@ -14,6 +15,7 @@ class CategoryController extends SCCategoryController
             ->with('childrenRecursive')
             ->whereNull('parent_id')
             ->get();
+
         return SCCategoryResource::collection($categories);
     }
 
