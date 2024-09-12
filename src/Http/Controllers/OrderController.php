@@ -4,10 +4,8 @@ namespace Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers;
 
 use Auth;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Rahat1994\SparkCommerce\Models\SCOrder;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Resources\SCMVOrderResource;
-use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Resources\ShopCategoryResource;
 use Rahat1994\SparkcommerceRestRoutes\Http\Controllers\SCBaseController;
 
 class OrderController extends SCBaseController
@@ -26,7 +24,7 @@ class OrderController extends SCBaseController
         $data = $this->callHook('orderParams', $params);
 
         $params = $data ?? $params;
-        
+
         $orders = SCOrder::limit($params['limit'])
             ->where('user_id', $params['user_id'])
             ->orderBy($params['order_by'], $params['order'])
@@ -35,6 +33,7 @@ class OrderController extends SCBaseController
         $data = $this->callHook('orderList', $orders);
 
         $orders = $data ?? $orders;
+
         return SCMVOrderResource::collection($orders);
     }
 
