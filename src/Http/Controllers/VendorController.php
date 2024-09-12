@@ -2,7 +2,6 @@
 
 namespace Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Rahat1994\SparkcommerceMultivendor\Models\SCMVVendor;
@@ -12,6 +11,7 @@ use Rahat1994\SparkcommerceRestRoutes\Http\Resources\SCCategoryResource;
 class VendorController extends SCMVBaseController
 {
     public $recordModel = SCMVVendor::class;
+
     public function topVendors(Request $request)
     {
         try {
@@ -21,6 +21,7 @@ class VendorController extends SCMVBaseController
 
             $modifiedTopVendors = $this->callHook('afterFetchingTopVendors', $topVendors);
             $topVendors = $modifiedTopVendors ?? $topVendors;
+
             return SCMVVendorResource::collection($topVendors);
         } catch (ModelNotFoundException $th) {
             // TODO: Improve the message and Localization
@@ -37,6 +38,7 @@ class VendorController extends SCMVBaseController
                 ->get();
             $modifiedVendors = $this->callHook('afterFetchingVendors', $vendors);
             $vendors = $modifiedVendors ?? $vendors;
+
             return SCMVVendorResource::collection($vendors);
         } catch (ModelNotFoundException $th) {
             // TODO: Improve the message and Localization
@@ -58,12 +60,13 @@ class VendorController extends SCMVBaseController
 
             $vendors = $this->recordModel::with('media', 'sCProducts')
                 ->when($category, function ($query, $category) {
-                    return $query->where('category', 'like', '%"' . $category . '"%');
+                    return $query->where('category', 'like', '%"'.$category.'"%');
                 })
                 ->get();
 
             $modifiedVendors = $this->callHook('afterFetchingSearchVendors', $vendors);
             $vendors = $modifiedVendors ?? $vendors;
+
             return SCMVVendorResource::collection($vendors);
         } catch (ModelNotFoundException $th) {
             // TODO: Improve the message and Localization

@@ -2,7 +2,6 @@
 
 namespace Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers;
 
-
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

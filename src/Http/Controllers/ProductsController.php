@@ -2,17 +2,14 @@
 
 namespace Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Rahat1994\SparkCommerce\Models\SCProduct;
 use Rahat1994\SparkcommerceMultivendor\Models\SCMVVendor;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Resources\SCMVProductResource;
-use Rahat1994\SparkcommerceRestRoutes\Concerns\CanCallHooks;
 
 class ProductsController extends SCMVBaseController
 {
-
     public $recordModel = SCProduct::class;
 
     public function productRecomendation(Request $request, $productCount)
@@ -29,6 +26,7 @@ class ProductsController extends SCMVBaseController
         $modifiedProducts = $this->callHook('afterFetchingProductRecommendation', $products);
 
         $products = $modifiedProducts ?? $products;
+
         return SCMVProductResource::collection($products);
     }
 
@@ -40,25 +38,27 @@ class ProductsController extends SCMVBaseController
         }
 
         $products = $vendor->scproducts()
-            ->where('name', 'like', '%' . $search_term . '%')
+            ->where('name', 'like', '%'.$search_term.'%')
             ->with('sCMVVendor', 'categories')
             ->paginate(10);
 
         $modifiedProducts = $this->callHook('afterFetchingSearchProdcuts', $products);
 
         $products = $modifiedProducts ?? $products;
+
         return SCMVProductResource::collection($products);
     }
 
     public function gloalSearch(Request $request)
     {
-        $products = $this->recordModel::where('name', 'like', '%' . $request->search_term . '%')
+        $products = $this->recordModel::where('name', 'like', '%'.$request->search_term.'%')
             ->with('sCMVVendor', 'categories')
             ->paginate(10);
 
         $modifiedProducts = $this->callHook('afterFetchingGloalSearch', $products);
 
         $products = $modifiedProducts ?? $products;
+
         return SCMVProductResource::collection($products);
     }
 
@@ -89,7 +89,7 @@ class ProductsController extends SCMVBaseController
         if (isset($validatedData['search'])) {
             $search = $validatedData['search'];
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%');
+                $q->where('name', 'like', '%'.$search.'%');
             });
         }
 
