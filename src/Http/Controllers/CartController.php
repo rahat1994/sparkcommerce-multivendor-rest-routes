@@ -2,6 +2,8 @@
 
 namespace Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers;
 
+use Binafy\LaravelCart\Models\Cart;
+use Illuminate\Support\Facades\Auth;
 use Rahat1994\SparkCommerce\Models\SCProduct;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Exceptions\VendorNotSameException;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Resources\SCMVProductResource;
@@ -52,11 +54,9 @@ class CartController extends SCCartController
             $this->vendorId = $vendorId;
 
             return $items;
-
         } catch (\Throwable $th) {
             throw $th;
         }
-
     }
 
     protected function beforeOrderIsSaved(array $orderData): array

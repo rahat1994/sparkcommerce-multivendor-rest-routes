@@ -3,67 +3,108 @@
 namespace Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Rahat1994\SparkcommerceMultivendor\Models\SCMVVendor;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Resources\SCMVVendorResource;
 use Rahat1994\SparkcommerceRestRoutes\Http\Resources\SCCategoryResource;
 
-class VendorController extends Controller
+class VendorController extends SCMVBaseController
 {
+    public $recordModel = SCMVVendor::class;
     public function topVendors(Request $request)
     {
-        $topVendors = SCMVVendor::whereJsonContains('meta->is_top_vendor', 1)
-            ->with('media', 'sCProducts')
-            ->get();
+        try {
+            $topVendors = $this->recordModel::whereJsonContains('meta->is_top_vendor', 1)
+                ->with('media', 'sCProducts')
+                ->get();
 
-        return SCMVVendorResource::collection($topVendors);
+            $modifiedTopVendors = $this->callHook('afterFetchingTopVendors', $topVendors);
+            $topVendors = $modifiedTopVendors ?? $topVendors;
+            return SCMVVendorResource::collection($topVendors);
+        } catch (ModelNotFoundException $th) {
+            // TODO: Improve the message and Localization
+            return response()->json(['message' => 'Vendor not found'], 404);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Something went wrong'], 500);
+        }
     }
 
     public function index(Request $request)
     {
-
-        $vendors = SCMVVendor::with('media', 'sCProducts')
-            ->get();
-
-        return SCMVVendorResource::collection($vendors);
+        try {
+            $vendors = $this->recordModel::with('media', 'sCProducts')
+                ->get();
+            $modifiedVendors = $this->callHook('afterFetchingVendors', $vendors);
+            $vendors = $modifiedVendors ?? $vendors;
+            return SCMVVendorResource::collection($vendors);
+        } catch (ModelNotFoundException $th) {
+            // TODO: Improve the message and Localization
+            return response()->json(['message' => 'Vendor not found'], 404);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['message' => 'Something went wrong'], 500);
+        }
     }
 
     public function search(Request $request, $category = null)
     {
-        $validator = validator()->make(['category' => $category], [
-            'category' => 'nullable|string',
-        ]);
-        $data = $validator->validate();
-        $category = $data['category'];
-        $vendors = SCMVVendor::with('media', 'sCProducts')
-            ->when($category, function ($query, $category) {
-                return $query->where('category', 'like', '%"'.$category.'"%');
-            })
-            ->get();
+        try {
+            $validator = validator()->make(['category' => $category], [
+                'category' => 'nullable|string',
+            ]);
+            $data = $validator->validate();
+            $category = $data['category'];
 
-        $vendors = SCMVVendor::with('media', 'sCProducts')->get();
+            $vendors = $this->recordModel::with('media', 'sCProducts')
+                ->when($category, function ($query, $category) {
+                    return $query->where('category', 'like', '%"' . $category . '"%');
+                })
+                ->get();
 
-        return SCMVVendorResource::collection($vendors);
+            $modifiedVendors = $this->callHook('afterFetchingSearchVendors', $vendors);
+            $vendors = $modifiedVendors ?? $vendors;
+            return SCMVVendorResource::collection($vendors);
+        } catch (ModelNotFoundException $th) {
+            // TODO: Improve the message and Localization
+            return response()->json(['message' => 'Vendor not found'], 404);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Something went wrong'], 500);
+        }
     }
 
     public function show(Request $request, $vendor_slug)
     {
-        $vendor = SCMVVendor::where('slug', $vendor_slug)->first();
-        if (! $vendor) {
-            return response()->json(['message' => 'Vendor not found'], 404);
-        }
+        try {
+            $vendor = $this->recordModel::where('slug', $vendor_slug)
+                ->with('media', 'sccategories')
+                ->firstOrFail();
 
-        return new SCMVVendorResource($vendor);
+            return new SCMVVendorResource($vendor);
+        } catch (ModelNotFoundException $th) {
+            // TODO: Improve the message and Localization
+            return response()->json(['message' => 'Vendor not found'], 404);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Something went wrong'], 500);
+        }
     }
 
     public function categories(Request $request, $vendor_slug)
     {
-        $vendor = SCMVVendor::where('slug', $vendor_slug)->first();
-        if (! $vendor) {
-            return response()->json(['message' => 'Vendor not found'], 404);
-        }
-        $categories = $vendor->sccategories()->with('childrenRecursive')->whereNull('parent_id')->get();
+        try {
+            $vendor = $this->recordModel::where('slug', $vendor_slug)->firstOrFail();
 
-        return SCCategoryResource::collection($categories);
+            $categories = $vendor->sccategories()->with('childrenRecursive')->whereNull('parent_id')->get();
+
+            $modifiedCategories = $this->callHook('afterFetchingVendorCategories', $categories);
+            $categories = $modifiedCategories ?? $categories;
+
+            return SCCategoryResource::collection($categories);
+        } catch (ModelNotFoundException $th) {
+            // TODO: Improve the message and Localization
+            return response()->json(['message' => 'Vendor not found'], 404);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Something went wrong'], 500);
+        }
     }
 }

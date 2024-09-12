@@ -2,9 +2,10 @@
 
 namespace Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers;
 
-use Auth;
+
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Rahat1994\SparkCommerce\Models\SCOrder;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Resources\SCMVOrderResource;
 use Rahat1994\SparkcommerceRestRoutes\Http\Controllers\SCBaseController;
@@ -80,7 +81,6 @@ class OrderController extends SCBaseController
                 400
             );
         }
-
     }
 
     public function cancelOrder($trackingNumber)

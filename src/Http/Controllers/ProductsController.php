@@ -3,13 +3,18 @@
 namespace Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Rahat1994\SparkCommerce\Models\SCProduct;
 use Rahat1994\SparkcommerceMultivendor\Models\SCMVVendor;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Resources\SCMVProductResource;
+use Rahat1994\SparkcommerceRestRoutes\Concerns\CanCallHooks;
 
-class ProductsController extends Controller
+class ProductsController extends SCMVBaseController
 {
+
+    public $recordModel = SCProduct::class;
+
     public function productRecomendation(Request $request, $productCount)
     {
         // validate productcount
@@ -17,10 +22,13 @@ class ProductsController extends Controller
             return response()->json(['error' => 'Invalid product count'], 400);
         }
 
-        $products = SCProduct::with('sCMVVendor', 'categories')
+        $products = $this->recordModel::with('sCMVVendor', 'categories')
             ->limit($productCount)
             ->get();
 
+        $modifiedProducts = $this->callHook('afterFetchingProductRecommendation', $products);
+
+        $products = $modifiedProducts ?? $products;
         return SCMVProductResource::collection($products);
     }
 
@@ -32,19 +40,25 @@ class ProductsController extends Controller
         }
 
         $products = $vendor->scproducts()
-            ->where('name', 'like', '%'.$search_term.'%')
+            ->where('name', 'like', '%' . $search_term . '%')
             ->with('sCMVVendor', 'categories')
             ->paginate(10);
 
+        $modifiedProducts = $this->callHook('afterFetchingSearchProdcuts', $products);
+
+        $products = $modifiedProducts ?? $products;
         return SCMVProductResource::collection($products);
     }
 
     public function gloalSearch(Request $request)
     {
-        $products = SCProduct::where('name', 'like', '%'.$request->search_term.'%')
+        $products = $this->recordModel::where('name', 'like', '%' . $request->search_term . '%')
             ->with('sCMVVendor', 'categories')
             ->paginate(10);
 
+        $modifiedProducts = $this->callHook('afterFetchingGloalSearch', $products);
+
+        $products = $modifiedProducts ?? $products;
         return SCMVProductResource::collection($products);
     }
 
@@ -60,7 +74,7 @@ class ProductsController extends Controller
         $vendor = SCMVVendor::where('slug', $vendor_slug)->firstOrFail();
 
         // Initialize the query builder for products
-        $query = SCProduct::where('vendor_id', $vendor->id)
+        $query = $this->recordModel::where('vendor_id', $vendor->id)
             ->with('sCMVVendor', 'categories');
 
         // Filter by categories if provided
@@ -75,12 +89,16 @@ class ProductsController extends Controller
         if (isset($validatedData['search'])) {
             $search = $validatedData['search'];
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', '%'.$search.'%');
+                $q->where('name', 'like', '%' . $search . '%');
             });
         }
 
         // Paginate the results
         $products = $query->paginate(10);
+
+        $modifiedProducts = $this->callHook('afterFetchingProductsSearch', $products);
+
+        $products = $modifiedProducts ?? $products;
 
         // Return the products as a resource collection
         return SCMVProductResource::collection($products);
@@ -88,20 +106,30 @@ class ProductsController extends Controller
 
     public function product(Request $request, $vendor_slug, $product_slug)
     {
-        $vendor = SCMVVendor::where('slug', $vendor_slug)->first();
-        if (! $vendor) {
-            return response()->json(['message' => 'Vendor not found'], 404);
-        }
+        try {
+            $vendor = $this->getRecordBySlug($vendor_slug, SCMVVendor::class);
 
-        $product = $vendor->scproducts()
-            ->where('slug', $product_slug)
-            ->with('sCMVVendor', 'categories')
-            ->first();
+            if (! $vendor) {
+                return response()->json(['message' => 'Vendor not found'], 404);
+            }
 
-        if (! $product) {
+            $product = $vendor->scproducts()
+                ->where('slug', $product_slug)
+                ->with('sCMVVendor', 'categories')
+                ->firstOrFail();
+
+            $modifiedProduct = $this->callHook('afterFetchingProduct', $product);
+
+            $product = $modifiedProduct ?? $product;
+
+            return SCMVProductResource::make($product);
+        } catch (ModelNotFoundException $exception) {
+            // TODO: Improve the message and Localization
             return response()->json(['message' => 'Product not found'], 404);
+        } catch (\Throwable $th) {
+            //throw $th;
+            // TODO: Improve the message and Localization
+            return response()->json(['message' => 'Something went wrong'], 500);
         }
-
-        return SCMVProductResource::make($product);
     }
 }
