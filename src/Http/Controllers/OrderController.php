@@ -5,10 +5,8 @@ namespace Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers;
 use Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Rahat1994\SparkCommerce\Models\SCOrder;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Resources\SCMVOrderResource;
-use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Resources\ShopCategoryResource;
 use Rahat1994\SparkcommerceRestRoutes\Http\Controllers\SCBaseController;
 
 class OrderController extends SCBaseController
@@ -28,7 +26,7 @@ class OrderController extends SCBaseController
         $data = $this->callHook('orderIndexParams', $params);
 
         $params = $data ?? $params;
-        
+
         $orders = SCOrder::limit($params['limit'])
             ->where('user_id', $params['user_id'])
             ->orderBy($params['order_by'], $params['order'])
@@ -37,6 +35,7 @@ class OrderController extends SCBaseController
         $data = $this->callHook('afterOrderListFetch', $orders);
 
         $orders = $data ?? $orders;
+
         return SCMVOrderResource::collection($orders);
     }
 
@@ -49,15 +48,15 @@ class OrderController extends SCBaseController
             $params = [
                 'tracking_number' => $trackingNumber,
             ];
-    
+
             $data = $this->callHook('singlerderParams', $params);
-    
+
             $params = $data ?? $params;
 
             $order = SCOrder::where('tracking_number', $params['tracking_number'])
                 ->where('user_id', $user->id)
                 ->firstOrFail();
-            
+
             $data = $this->callHook('afterSingleOrderFetch', $order);
 
             $order = $data ?? $order;
@@ -72,8 +71,7 @@ class OrderController extends SCBaseController
                 ],
                 404
             );
-        }        
-        catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             //throw $th;
             return response()->json(
                 [
