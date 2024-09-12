@@ -7,14 +7,15 @@ use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers\OrderControlle
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers\ProductsController;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers\ShopCategoryController;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers\VendorController;
+use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers\CategoryController;
 
 Route::group(['prefix' => 'scmv/v1'], function () {
     Route::get('/shop_categories', [ShopCategoryController::class, 'index']);
     Route::get('/top_vendors', [VendorController::class, 'topVendors']);
     Route::get('/advertisements', [AdvertisementController::class, 'advertisements']);
     Route::get('/product_recomedation/{product_count}', [ProductsController::class, 'productRecomendation']);
-
     Route::get('/search/{search_term}', [ProductsController::class, 'gloalSearch']);
+
 
     Route::group(['prefix' => 'vendor'], function () {
         Route::get('/', [VendorController::class, 'index']);
@@ -36,4 +37,22 @@ Route::group(['prefix' => 'scmv/v1'], function () {
         Route::get('/', [OrderController::class, 'index']);
         Route::get('/{trackingNumber}', [OrderController::class, 'show']);
     });
+});
+
+Route::group(['prefix' => 'sc/v1'], function () {
+
+    Route::group(['middleware' => ['auth:sanctum']], function () {
+
+        Route::post('/associate_anonymous_cart', [CartController::class, 'associateAnonymousCart']);
+        Route::post('/checkout', [CartController::class, 'checkout']);
+    });
+
+    Route::get('/cart/{reference?}', [CartController::class, 'getCart']);
+    Route::post('/cart/{reference?}', [CartController::class, 'addToCart']);
+
+    Route::delete('/cart/clear_all', [CartController::class, 'clearUserCart']);
+    Route::delete('/cart/{slug}/{reference?}', [CartController::class, 'removeFromCart']);
+
+    Route::post('/validate-coupon', [CartController::class, 'validateCoupon']);
+    Route::get('/categories/{vendor_id}', [CategoryController::class, 'index']);
 });
