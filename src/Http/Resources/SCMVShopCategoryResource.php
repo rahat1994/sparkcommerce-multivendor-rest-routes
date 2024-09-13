@@ -4,7 +4,7 @@ namespace Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ShopCategoryResource extends JsonResource
+class SCMVShopCategoryResource extends JsonResource
 {
     public function toArray($request)
     {
