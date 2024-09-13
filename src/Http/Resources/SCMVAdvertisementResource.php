@@ -19,7 +19,7 @@ class SCMVAdvertisementResource extends JsonResource
                     'collection' => $media->collection_name,
                 ];
             }),
-            
+
         ];
     }
 }

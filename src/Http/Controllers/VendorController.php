@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Rahat1994\SparkCommerce\Models\SCCategory;
 use Rahat1994\SparkcommerceMultivendor\Models\SCMVVendor;
-use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Resources\SCMVVendorResource;
-use Rahat1994\SparkcommerceRestRoutes\Http\Resources\SCCategoryResource;
 
 class VendorController extends SCMVBaseController
 {
@@ -109,6 +107,7 @@ class VendorController extends SCMVBaseController
             return response()->json(['message' => 'Vendor not found'], 404);
         } catch (\Throwable $th) {
             dd($th);
+
             return response()->json(['message' => 'Something went wrong'], 500);
         }
     }

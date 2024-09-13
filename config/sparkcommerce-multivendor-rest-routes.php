@@ -1,4 +1,5 @@
 <?php
+
 use Rahat1994\SparkCommerce\Models\SCCategory;
 use Rahat1994\SparkCommerce\Models\SCOrder;
 use Rahat1994\SparkCommerce\Models\SCProduct;
