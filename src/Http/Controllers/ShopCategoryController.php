@@ -20,7 +20,7 @@ class ShopCategoryController extends SCMVBaseController
 
             $shopCategories = $modifiedShopCategories ?? $shopCategories;
 
-            return $this->resourceCollection($this->recordModel, $shopCategories);
+            return $this->resourceCollection($shopCategories, $this->recordModel);
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Something went wrong.'], 500);
         }
