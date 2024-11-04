@@ -44,6 +44,7 @@ Route::group(['prefix' => 'sc/v1'], function () {
 
         Route::post('/associate_anonymous_cart', [CartController::class, 'associateAnonymousCart']);
         Route::post('/checkout', [CartController::class, 'checkout']);
+        Route::post('/validate-coupon', [CartController::class, 'validateCoupon']);
     });
 
     Route::get('/cart/{reference?}', [CartController::class, 'getCart']);
@@ -52,6 +53,6 @@ Route::group(['prefix' => 'sc/v1'], function () {
     Route::delete('/cart/clear_all', [CartController::class, 'clearUserCart']);
     Route::delete('/cart/{slug}/{reference?}', [CartController::class, 'removeFromCart']);
 
-    Route::post('/validate-coupon', [CartController::class, 'validateCoupon']);
+    
     Route::get('/categories/{vendor_id}', [CategoryController::class, 'categoriesByVendorId']);
 });
