@@ -53,6 +53,5 @@ Route::group(['prefix' => 'sc/v1'], function () {
     Route::delete('/cart/clear_all', [CartController::class, 'clearUserCart']);
     Route::delete('/cart/{slug}/{reference?}', [CartController::class, 'removeFromCart']);
 
-    
     Route::get('/categories/{vendor_id}', [CategoryController::class, 'categoriesByVendorId']);
 });
