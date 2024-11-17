@@ -72,4 +72,23 @@ class CartController extends SCCartController
             SCProduct::class => SCMVProductResource::class,
         ];
     }
+
+
+    protected function couponValidationShouldContinue($cart, $couponCode)
+    {
+        $cartItems = $cart->items()->get();
+        $vendorId = null;
+        foreach ($cartItems as $item) {
+            $vendorId = $item->itemable->vendor_id;
+        }
+
+        $couponData = $this->couponData($couponCode);
+
+
+        if ($couponData->vendor_id != $vendorId) {
+            return [false, 'Invalid Coupon'];
+        }
+
+        return [true, ''];
+    }
 }
