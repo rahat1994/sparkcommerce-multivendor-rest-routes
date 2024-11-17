@@ -73,7 +73,6 @@ class CartController extends SCCartController
         ];
     }
 
-
     protected function couponValidationShouldContinue($cart, $couponCode)
     {
         $cartItems = $cart->items()->get();
@@ -83,7 +82,6 @@ class CartController extends SCCartController
         }
 
         $couponData = $this->couponData($couponCode);
-
 
         if ($couponData->vendor_id != $vendorId) {
             return [false, 'Invalid Coupon'];
