@@ -40,6 +40,7 @@ class SCMVVendorResource extends JsonResource
             'email' => $this->email,
             'postcodes_covered' => $postcodes_covered,
             'delivery_days' => $delivery_days,
+            'minimum_order_amount' => '100',
         ];
     }
 }
