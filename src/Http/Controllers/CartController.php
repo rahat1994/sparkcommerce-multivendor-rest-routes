@@ -80,6 +80,7 @@ class CartController extends SCCartController
         foreach ($cartItems as $item) {
             $vendorId = $item->itemable->vendor_id;
         }
+
         if (!$vendorId) {
             throw new \Exception('Cart is empty or does not have items with vendor information');
         }

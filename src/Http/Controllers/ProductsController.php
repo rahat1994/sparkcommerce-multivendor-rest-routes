@@ -127,7 +127,7 @@ class ProductsController extends SCMVBaseController
             // TODO: Improve the message and Localization
             return response()->json(['message' => 'Product not found'], 404);
         } catch (\Throwable $th) {
-            //throw $th;
+            // throw $th;
             // TODO: Improve the message and Localization
             return response()->json(['message' => 'Something went wrong'], 500);
         }
