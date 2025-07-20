@@ -81,7 +81,7 @@ class CartController extends SCCartController
             $vendorId = $item->itemable->vendor_id;
         }
         if (!$vendorId) {
-            return [false, 'Cart is empty or not found.'];
+            throw new \Exception('Cart is empty or does not have items with vendor information');
         }
         $couponData = $this->couponData($couponCode);
 
