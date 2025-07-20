@@ -33,7 +33,7 @@ class VendorController extends SCMVBaseController
     public function index(Request $request)
     {
         try {
-            $vendors = $this->recordModel::with('media', 'sCProducts')
+            $vendors = $this->recordModel::with('media')
                 ->get();
             $modifiedVendors = $this->callHook('afterFetchingVendors', $vendors);
             $vendors = $modifiedVendors ?? $vendors;

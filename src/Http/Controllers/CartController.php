@@ -80,7 +80,9 @@ class CartController extends SCCartController
         foreach ($cartItems as $item) {
             $vendorId = $item->itemable->vendor_id;
         }
-
+        if (!$vendorId) {
+            return [false, 'Cart is empty or not found.'];
+        }
         $couponData = $this->couponData($couponCode);
 
         if ($couponData->vendor_id != $vendorId) {
@@ -88,5 +90,12 @@ class CartController extends SCCartController
         }
 
         return [true, ''];
+    }
+
+    public function afterOrderIsSaved($order)
+    {
+        // Custom logic after order is saved
+        // For example, you might want to send a confirmation email or update inventory
+        return $order;
     }
 }
