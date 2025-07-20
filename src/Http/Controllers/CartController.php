@@ -80,7 +80,7 @@ class CartController extends SCCartController
         foreach ($cartItems as $item) {
             $vendorId = $item->itemable->vendor_id;
         }
-        if (!$vendorId) {
+        if (! $vendorId) {
             return [false, 'Cart is empty or not found.'];
         }
         $couponData = $this->couponData($couponCode);
