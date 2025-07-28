@@ -16,9 +16,12 @@ class SCMVVendorResource extends JsonResource
         } else {
             $meta = $this->meta;
         }
+        $postcodes_covered = $this->deliveryAreas->pluck('post_code')->toArray();
 
-        $postcodes_covered = Arr::get($meta, 'postcodes', []);
         $delivery_days = Arr::get($meta, 'delivery_days', []);
+        $minimum_order_amount = Arr::get($meta, 'minimum_order_amount', '');
+        $free_shipping_minimum_order_amount = Arr::get($meta, 'free_shipping_minimum_order_amount', '');
+        $minimum_shipping_fee = Arr::get($meta, 'minimum_shipping_fee', '');
 
         $media_urls = [];
 
@@ -40,7 +43,10 @@ class SCMVVendorResource extends JsonResource
             'email' => $this->email,
             'postcodes_covered' => $postcodes_covered,
             'delivery_days' => $delivery_days,
-            'minimum_order_amount' => '100',
+            'minimum_order_amount' => $minimum_order_amount,
+            'free_shipping_minimum_order_amount' => $free_shipping_minimum_order_amount,
+            'minimum_shipping_fee' => $minimum_shipping_fee,
+            'is_top_vendor' => Arr::get($meta, 'is_top_vendor', false)
         ];
     }
 }

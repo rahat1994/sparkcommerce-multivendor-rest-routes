@@ -8,6 +8,9 @@ use Rahat1994\SparkCommerce\Models\SCProduct;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Exceptions\VendorNotSameException;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Resources\SCMVProductResource;
 use Rahat1994\SparkcommerceRestRoutes\Http\Controllers\CartController as SCCartController;
+use Rahat1994\SparkcommerceMultivendor\Models\SCMVVendor;
+use Rahat1994\SparkcommerceRestRoutes\Exceptions\MinimumOrderAmountException;
+use Illuminate\Support\Arr;
 
 class CartController extends SCCartController
 {
@@ -98,5 +101,48 @@ class CartController extends SCCartController
         // Custom logic after order is saved
         // For example, you might want to send a confirmation email or update inventory
         return $order;
+    }
+
+    protected function afterProcessingCheckoutCartItems($items, $totalAmount)
+    {
+        // dd($items, $totalAmount, $this->vendorId);
+
+        $vendor = SCMVVendor::find($this->vendorId);
+        if(! $vendor) {
+            throw new \Exception('Vendor not found for the cart items');
+        }
+
+        $meta = $vendor->meta;
+
+        $minimumOrderAmount = Arr::get($meta, 'minimum_order_amount', 0);
+        $minimumShippingFee = Arr::get($meta, 'minimum_shipping_fee', 0);
+        $freeShippingMinimumOrderAmount = Arr::get($meta, 'free_shipping_minimum_order_amount', 0);
+
+        if ($totalAmount < $minimumOrderAmount) {
+            throw new MinimumOrderAmountException("Minimum order amount is {$minimumOrderAmount}");
+        }
+
+        if ($totalAmount < $freeShippingMinimumOrderAmount) {
+            $totalAmount += $minimumShippingFee;
+
+            $orderAmountMeta = [
+                'amount' => $totalAmount,
+                'meta' => [
+                    'message' => 'Shipping fee applied',
+                    'minimum_shipping_fee' => $minimumShippingFee,
+                    'free_shipping_minimum_order_amount' => $freeShippingMinimumOrderAmount,
+                ]
+            ];
+
+        }
+
+        if(!isset($orderAmountMeta)){
+            $orderAmountMeta = [
+                'amount' => $totalAmount,
+                'meta' => []
+            ];
+        }
+
+        return $orderAmountMeta;
     }
 }
