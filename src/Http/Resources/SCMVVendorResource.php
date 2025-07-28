@@ -46,7 +46,7 @@ class SCMVVendorResource extends JsonResource
             'minimum_order_amount' => $minimum_order_amount,
             'free_shipping_minimum_order_amount' => $free_shipping_minimum_order_amount,
             'minimum_shipping_fee' => $minimum_shipping_fee,
-            'is_top_vendor' => Arr::get($meta, 'is_top_vendor', false)
+            'is_top_vendor' => Arr::get($meta, 'is_top_vendor', false),
         ];
     }
 }

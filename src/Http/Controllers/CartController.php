@@ -3,14 +3,14 @@
 namespace Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Controllers;
 
 use Binafy\LaravelCart\Models\Cart;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Rahat1994\SparkCommerce\Models\SCProduct;
+use Rahat1994\SparkcommerceMultivendor\Models\SCMVVendor;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Exceptions\VendorNotSameException;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Resources\SCMVProductResource;
-use Rahat1994\SparkcommerceRestRoutes\Http\Controllers\CartController as SCCartController;
-use Rahat1994\SparkcommerceMultivendor\Models\SCMVVendor;
 use Rahat1994\SparkcommerceRestRoutes\Exceptions\MinimumOrderAmountException;
-use Illuminate\Support\Arr;
+use Rahat1994\SparkcommerceRestRoutes\Http\Controllers\CartController as SCCartController;
 
 class CartController extends SCCartController
 {
@@ -108,7 +108,7 @@ class CartController extends SCCartController
         // dd($items, $totalAmount, $this->vendorId);
 
         $vendor = SCMVVendor::find($this->vendorId);
-        if(! $vendor) {
+        if (! $vendor) {
             throw new \Exception('Vendor not found for the cart items');
         }
 
@@ -131,15 +131,15 @@ class CartController extends SCCartController
                     'message' => 'Shipping fee applied',
                     'minimum_shipping_fee' => $minimumShippingFee,
                     'free_shipping_minimum_order_amount' => $freeShippingMinimumOrderAmount,
-                ]
+                ],
             ];
 
         }
 
-        if(!isset($orderAmountMeta)){
+        if (! isset($orderAmountMeta)) {
             $orderAmountMeta = [
                 'amount' => $totalAmount,
-                'meta' => []
+                'meta' => [],
             ];
         }
 
