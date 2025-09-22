@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Rahat1994\SparkCommerce\Models\SCCategory;
 use Rahat1994\SparkcommerceMultivendor\Models\SCMVVendor;
-
+use Illuminate\Support\Arr;
+use Rahat1994\SparkcommerceMultivendorRestRoutes\Concerns\CanInteractWithVendors;
 class VendorController extends SCMVBaseController
 {
+    use CanInteractWithVendors;
     public $recordModel = SCMVVendor::class;
 
     public function topVendors(Request $request)
@@ -17,6 +19,8 @@ class VendorController extends SCMVBaseController
             $topVendors = $this->recordModel::whereJsonContains('meta->is_top_vendor', 1)
                 ->with('media', 'sCProducts')
                 ->get();
+
+            $topVendors = $this->removeDisabledVendors($topVendors);
 
             $modifiedTopVendors = $this->callHook('afterFetchingTopVendors', $topVendors);
             $topVendors = $modifiedTopVendors ?? $topVendors;
@@ -35,6 +39,7 @@ class VendorController extends SCMVBaseController
         try {
             $vendors = $this->recordModel::with('media')
                 ->get();
+            $vendors = $this->removeDisabledVendors($vendors);
             $modifiedVendors = $this->callHook('afterFetchingVendors', $vendors);
             $vendors = $modifiedVendors ?? $vendors;
 
@@ -63,6 +68,8 @@ class VendorController extends SCMVBaseController
                 })
                 ->get();
 
+            $vendors = $this->removeDisabledVendors($vendors);
+
             $modifiedVendors = $this->callHook('afterFetchingSearchVendors', $vendors);
             $vendors = $modifiedVendors ?? $vendors;
 
@@ -81,6 +88,13 @@ class VendorController extends SCMVBaseController
             $vendor = $this->recordModel::where('slug', $vendor_slug)
                 ->with('media', 'sccategories')
                 ->firstOrFail();
+            $vendor = $this->removeDisabledVendors(collect([$vendor]))->first();
+            if (!$vendor) {
+                return response()->json(['message' => 'Vendor not found'], 404);
+            }
+
+            $modifiedVendor = $this->callHook('afterFetchingSingleVendor', $vendor);
+            $vendor = $modifiedVendor ?? $vendor;
 
             return $this->singleModelResource($vendor);
         } catch (ModelNotFoundException $th) {
@@ -96,6 +110,11 @@ class VendorController extends SCMVBaseController
         try {
             $vendor = $this->getRecordBySlug($vendor_slug);
 
+            $vendor = $this->removeDisabledVendors(collect([$vendor]))->first();
+            if (!$vendor) {
+                return response()->json(['message' => 'Vendor not found'], 404);
+            }
+
             $categories = $vendor->sccategories()->with('childrenRecursive')->whereNull('parent_id')->get();
 
             $modifiedCategories = $this->callHook('afterFetchingVendorCategories', $categories);
@@ -106,8 +125,6 @@ class VendorController extends SCMVBaseController
             // TODO: Improve the message and Localization
             return response()->json(['message' => 'Vendor not found'], 404);
         } catch (\Throwable $th) {
-            dd($th);
-
             return response()->json(['message' => 'Something went wrong'], 500);
         }
     }
