@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Rahat1994\SparkCommerce\Models\SCCategory;
 use Rahat1994\SparkcommerceMultivendor\Models\SCMVVendor;
-use Illuminate\Support\Arr;
 use Rahat1994\SparkcommerceMultivendorRestRoutes\Concerns\CanInteractWithVendors;
+
 class VendorController extends SCMVBaseController
 {
     use CanInteractWithVendors;
+
     public $recordModel = SCMVVendor::class;
 
     public function topVendors(Request $request)
@@ -89,7 +90,7 @@ class VendorController extends SCMVBaseController
                 ->with('media', 'sccategories')
                 ->firstOrFail();
             $vendor = $this->removeDisabledVendors(collect([$vendor]))->first();
-            if (!$vendor) {
+            if (! $vendor) {
                 return response()->json(['message' => 'Vendor not found'], 404);
             }
 
@@ -111,7 +112,7 @@ class VendorController extends SCMVBaseController
             $vendor = $this->getRecordBySlug($vendor_slug);
 
             $vendor = $this->removeDisabledVendors(collect([$vendor]))->first();
-            if (!$vendor) {
+            if (! $vendor) {
                 return response()->json(['message' => 'Vendor not found'], 404);
             }
 
