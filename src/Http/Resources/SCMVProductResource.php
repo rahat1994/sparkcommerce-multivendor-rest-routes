@@ -2,6 +2,7 @@
 
 namespace Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Resources;
 
+use Rahat1994\SparkcommerceMultivendorRestRoutes\Http\Resources\SCMVVendorResource;
 use Rahat1994\SparkcommerceRestRoutes\Http\Resources\SCProductResource;
 
 class SCMVProductResource extends SCProductResource
