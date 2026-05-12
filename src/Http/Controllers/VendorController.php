@@ -129,4 +129,24 @@ class VendorController extends SCMVBaseController
             return response()->json(['message' => 'Something went wrong'], 500);
         }
     }
+
+    public function category(Request $request, $vendor_slug, $category_id)
+    {
+        try {
+            $vendor = $this->getRecordBySlug($vendor_slug);
+
+            $vendor = $this->removeDisabledVendors(collect([$vendor]))->first();
+            if (! $vendor) {
+                return response()->json(['message' => 'Vendor not found'], 404);
+            }
+
+            $category = $vendor->sccategories()->with('childrenRecursive')->findOrFail($category_id);
+
+            return $this->singleModelResource($category, SCCategory::class);
+        } catch (ModelNotFoundException $th) {
+            return response()->json(['message' => 'Category not found'], 404);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Something went wrong'], 500);
+        }
+    }
 }
