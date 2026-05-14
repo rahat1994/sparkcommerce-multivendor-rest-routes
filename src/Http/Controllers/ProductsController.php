@@ -37,7 +37,7 @@ class ProductsController extends SCMVBaseController
             return response()->json(['message' => 'Vendor not found'], 404);
         }
 
-        $products = $vendor->scproducts()
+        $products = $vendor->sCProducts()
             ->where('name', 'like', '%'.$search_term.'%')
             ->with('sCMVVendor', 'categories')
             ->paginate(10);
@@ -49,9 +49,9 @@ class ProductsController extends SCMVBaseController
         return SCMVProductResource::collection($products);
     }
 
-    public function gloalSearch(Request $request)
+    public function gloalSearch(Request $request, string $search_term)
     {
-        $products = $this->recordModel::where('name', 'like', '%'.$request->search_term.'%')
+        $products = $this->recordModel::where('name', 'like', '%'.$search_term.'%')
             ->with('sCMVVendor', 'categories')
             ->paginate(10);
 
@@ -113,7 +113,7 @@ class ProductsController extends SCMVBaseController
                 return response()->json(['message' => 'Vendor not found'], 404);
             }
 
-            $product = $vendor->scproducts()
+            $product = $vendor->sCProducts()
                 ->where('slug', $product_slug)
                 ->with('sCMVVendor', 'categories')
                 ->firstOrFail();
